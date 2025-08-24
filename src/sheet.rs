@@ -62,7 +62,7 @@ pub struct Sheet<'sheet> {
 
 impl<'sheet> Sheet<'sheet> {
     pub fn new(starting_rows: Vec<Vec<CellValue>>) -> Sheet<'sheet> {
-        let observer_sheet = vec![vec![RefCell::new(Vec::new()); starting_rows[0].len()]; starting_rows.len()];
+        let observer_sheet: ObserverSheet = vec![vec![RefCell::new(Vec::new()); starting_rows[0].len()]; starting_rows.len()];
         Sheet { rows: starting_rows, observer_sheet }
     }
     
@@ -89,7 +89,7 @@ impl<'sheet> Sheet<'sheet> {
         range.cached_value.get()
     }
     
-    pub fn display(&'sheet mut self) {
+    pub fn display(&'sheet self) {
         for (row_index, row) in self.rows.iter().enumerate() {
             for (col_index, _cell) in row.iter().enumerate() {
                 print!("{} ", self.get_value(Pos{row: row_index, col: col_index}, None, None));

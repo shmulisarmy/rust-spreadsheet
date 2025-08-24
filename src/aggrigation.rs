@@ -1,36 +1,44 @@
+use std::{collections::HashMap, sync::LazyLock};
 
-pub fn sum(values: Vec<f64>) -> f64 {
+
+
+
+type Aggregation = fn(values: Vec<f64>) -> f64;
+
+
+
+static SUM: Aggregation = |values| {
     let mut total = 0.0;
     for value in values {
         total += value;
     }   
     total
-}   
+};
 
 
 
-pub fn avg(values: Vec<f64>) -> f64 {
+static AVG: Aggregation = |values| {
     let mut total = 0.0;
     for value in &values {
         total += value;
     }   
     total / values.len() as f64
-}   
+};
 
 
 
 
-pub fn product(values: Vec<f64>) -> f64 {
+static PRODUCT: Aggregation = |values| {
     let mut total = 1.0;
-    for value in values {
+    for value in &values {
         total *= value;
     }   
     total
-}   
+};   
 
 
 
-pub fn min(values: Vec<f64>) -> f64 {
+static MIN: Aggregation = |values| {
     let mut min = f64::MAX;
     for value in values {
         if value < min {
@@ -38,11 +46,11 @@ pub fn min(values: Vec<f64>) -> f64 {
         }
     }   
     min
-}   
+};
 
 
 
-pub fn max(values: Vec<f64>) -> f64 {
+static MAX: Aggregation = |values| {
     let mut max = f64::MIN;
     for value in values {
         if value > max {
@@ -50,4 +58,15 @@ pub fn max(values: Vec<f64>) -> f64 {
         }
     }   
     max
-}   
+};   
+
+
+pub static AGGREGATORS: LazyLock<HashMap<&'static str, &'static Aggregation>> = LazyLock::new(|| {
+    let mut m = HashMap::new();
+    m.insert("sum", &SUM);
+    m.insert("avg", &AVG);
+    m.insert("product", &PRODUCT);
+    m.insert("min", &MIN);
+    m.insert("max", &MAX);
+    m
+});
