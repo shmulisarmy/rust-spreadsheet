@@ -16,7 +16,13 @@ static SUM: Aggregation = |values| {
 };
 
 
-
+fn sum(values: Vec<f64>) -> f64 {
+    let mut total = 0.0;
+    for value in values {
+        total += value;
+    }   
+    total
+}
 static AVG: Aggregation = |values| {
     let mut total = 0.0;
     for value in &values {
